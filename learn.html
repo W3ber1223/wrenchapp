@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="mobile-web-app-capable" content="yes">
+<title>WRENCH. — Learn</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VR042VSNK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2VR042VSNK');</script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#1a1a1a;--s3:#222222;--b1:#2a2a2a;--b2:#333;
+  --green:#22c97e;--gd:#22c97e1a;--gb:#22c97e40;
+  --amber:#f59e0b;--ad:#f59e0b18;--ab:#f59e0b40;
+  --red:#ef4444;--rd:#ef44441a;--rb:#ef444440;
+  --blue:#3b82f6;--bld:#3b82f618;--blb:#3b82f640;
+  --purple:#a855f7;--pd:#a855f718;
+  --t1:#efefef;--t2:#888;--t3:#484848;
+  --r:12px;--rs:8px;--p:18px;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+  --fast:120ms;--med:200ms;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-text-size-adjust:100%;}
+body{background:var(--bg);color:var(--t1);font-family:var(--sans);font-size:14px;max-width:430px;margin:0 auto;overflow-x:hidden;min-height:100vh;-webkit-tap-highlight-color:transparent;}
+button{cursor:pointer;border:none;background:none;font-family:var(--sans);}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;gap:12px;padding:12px var(--p) 10px;position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--b1);z-index:50;}
+.back-btn{color:var(--green);font-family:var(--mono);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.topbar-logo{font-family:var(--mono);font-size:18px;font-weight:700;}
+.topbar-logo em{color:var(--green);font-style:normal;}
+.topbar-sub{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:1px;}
+
+/* ── CATEGORY PILLS ── */
+.cat-row{display:flex;gap:8px;padding:10px var(--p);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--b1);}
+.cat-row::-webkit-scrollbar{display:none;}
+.cat-pill{flex-shrink:0;padding:6px 14px;border-radius:20px;font-family:var(--mono);font-size:10px;background:var(--s1);border:1px solid var(--b1);color:var(--t3);cursor:pointer;transition:all var(--fast);}
+.cat-pill.on{background:var(--gd);border-color:var(--gb);color:var(--green);}
+
+/* ── TOPIC LIST ── */
+.topic-list{padding:12px var(--p);display:flex;flex-direction:column;gap:10px;padding-bottom:60px;}
+
+/* ── TOPIC CARD ── */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;transition:border-color var(--fast);}
+.card.open{border-color:var(--green);}
+.card-hdr{display:flex;align-items:center;gap:12px;padding:14px 15px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:background var(--fast);}
+.card-hdr:active{background:var(--gd);}
+.card-ico{font-size:26px;flex-shrink:0;width:36px;text-align:center;}
+.card-info{flex:1;}
+.card-title{font-size:14px;font-weight:600;color:var(--t1);line-height:1.3;}
+.card-sub{font-size:10px;color:var(--t3);margin-top:2px;font-family:var(--mono);}
+.card-arrow{font-size:11px;color:var(--t3);transition:transform var(--fast);}
+.card.open .card-arrow{transform:rotate(90deg);color:var(--green);}
+.card-body{display:none;border-top:1px solid var(--b1);}
+.card.open .card-body{display:block;animation:bodyIn var(--med) ease;}
+@keyframes bodyIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── INTERACTIVE SVG DIAGRAM ── */
+.diagram-wrap{padding:16px;background:var(--s2);position:relative;}
+.diagram-wrap svg{display:block;margin:0 auto;max-width:100%;}
+.diagram-hint{text-align:center;font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:1px;margin-top:8px;}
+
+/* Hotspot — tappable areas on SVG */
+.hotspot{cursor:pointer;}
+.hotspot:hover rect,.hotspot:hover circle,.hotspot:hover ellipse{opacity:.85;}
+
+/* Info panel that slides up when hotspot tapped */
+.info-panel{background:var(--s3);border:1px solid var(--b1);border-radius:var(--rs);margin:0 16px 16px;padding:14px;display:none;animation:bodyIn var(--fast) ease;}
+.info-panel.show{display:block;}
+.info-panel-ttl{font-family:var(--mono);font-size:11px;color:var(--green);font-weight:700;margin-bottom:6px;}
+.info-panel-body{font-size:13px;color:var(--t2);line-height:1.7;}
+.info-test{margin-top:10px;padding:8px 10px;background:var(--s2);border-radius:6px;border-left:3px solid var(--amber);}
+.info-test-lbl{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:1px;margin-bottom:3px;}
+.info-test-txt{font-size:12px;color:#d4a017;line-height:1.5;}
+.info-close{float:right;font-family:var(--mono);font-size:10px;color:var(--t3);cursor:pointer;margin-top:-2px;}
+
+/* ── ONION LAYERS ── */
+.layers{display:flex;flex-direction:column;}
+.layer{border-bottom:1px solid var(--b1);cursor:pointer;}
+.layer:last-child{border-bottom:none;}
+.layer-hdr{display:flex;align-items:center;gap:10px;padding:11px 15px;-webkit-user-select:none;user-select:none;}
+.layer-hdr:active{background:var(--s2);}
+.layer-num{width:20px;height:20px;border-radius:50%;font-family:var(--mono);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.layer-n1{background:var(--gd);color:var(--green);border:1px solid var(--gb);}
+.layer-n2{background:var(--bld);color:var(--blue);border:1px solid var(--blb);}
+.layer-n3{background:var(--ad);color:var(--amber);border:1px solid var(--ab);}
+.layer-n4{background:var(--pd);color:var(--purple);border:1px solid #a855f740;}
+.layer-n5{background:var(--rd);color:var(--red);border:1px solid var(--rb);}
+.layer-q{font-size:13px;font-weight:500;color:var(--t1);flex:1;line-height:1.3;}
+.layer-chevron{font-size:10px;color:var(--t3);transition:transform var(--fast);}
+.layer.open .layer-chevron{transform:rotate(90deg);}
+.layer-content{display:none;padding:0 15px 14px 45px;}
+.layer.open .layer-content{display:block;animation:bodyIn var(--fast) ease;}
+.layer-text{font-size:13px;color:var(--t2);line-height:1.7;}
+.layer-text strong{color:var(--t1);}
+.layer-text .highlight{color:var(--green);font-weight:600;}
+.layer-text .warn{color:var(--amber);}
+.layer-text .danger{color:var(--red);}
+
+/* Error code table */
+.err-table{width:100%;border-collapse:collapse;margin-top:8px;}
+.err-table th{font-family:var(--mono);font-size:9px;color:var(--t3);letter-spacing:1px;padding:6px 10px;text-align:left;border-bottom:1px solid var(--b1);}
+.err-table td{font-size:12px;padding:8px 10px;border-bottom:1px solid var(--b1);vertical-align:top;}
+.err-table tr:last-child td{border-bottom:none;}
+.err-code{font-family:var(--mono);font-weight:700;color:var(--green);}
+.err-sev-h{color:var(--red);}
+.err-sev-m{color:var(--amber);}
+.err-sev-l{color:var(--green);}
+
+/* Brand selector */
+.brand-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:12px 15px;border-bottom:1px solid var(--b1);}
+.brand-tab{padding:5px 12px;border-radius:20px;font-family:var(--mono);font-size:10px;background:var(--s2);border:1px solid var(--b1);color:var(--t3);cursor:pointer;transition:all var(--fast);}
+.brand-tab.on{background:var(--gd);border-color:var(--gb);color:var(--green);}
+.brand-content{display:none;padding:0 15px 15px;}
+.brand-content.on{display:block;}
+
+/* Encouragement bar */
+.enc-bar{background:linear-gradient(135deg,var(--gd),transparent);border-left:3px solid var(--green);padding:10px 14px;margin:12px 15px 0;border-radius:0 var(--rs) var(--rs) 0;}
+.enc-bar p{font-size:13px;color:var(--green);line-height:1.5;}
+
+/* Animated indicator dots */
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(.8);}50%{opacity:1;transform:scale(1.1);}}
+.pulse-dot{animation:pulse 1.5s infinite;}
+
+/* Flow animation for refrigerant circuit */
+@keyframes flowRight{from{stroke-dashoffset:20;}to{stroke-dashoffset:0;}}
+@keyframes flowLeft{from{stroke-dashoffset:0;}to{stroke-dashoffset:20;}}
+.flow-hot{animation:flowRight 0.8s linear infinite;stroke-dasharray:6 4;}
+.flow-cold{animation:flowLeft 0.8s linear infinite;stroke-dasharray:6 4;}
+
+/* Electrical current flow */
+@keyframes elecFlow{from{stroke-dashoffset:30;}to{stroke-dashoffset:0;}}
+.elec-flow{animation:elecFlow 1s linear infinite;stroke-dasharray:8 4;}
+
+/* Water flow */
+@keyframes waterFlow{from{stroke-dashoffset:20;}to{stroke-dashoffset:0;}}
+.water-flow{animation:waterFlow 1.2s linear infinite;stroke-dasharray:5 3;}
+
+/* Compressor animation */
+@keyframes compressSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+.comp-spin{transform-origin:130px 110px;animation:compressSpin 2s linear infinite;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="/" class="back-btn">← WRENCH.</a>
+  <div>
+    <div class="topbar-logo">LEARN<em>.</em></div>
+    <div class="topbar-sub">POCKET FIELD GUIDE</div>
+  </div>
+</div>
+
+<div class="cat-row">
+  <div class="cat-pill on" onclick="filterCat('all',this)">ALL</div>
+  <div class="cat-pill" onclick="filterCat('ac',this)">❄️ AC / HVAC</div>
+  <div class="cat-pill" onclick="filterCat('elec',this)">⚡ ELECTRICAL</div>
+  <div class="cat-pill" onclick="filterCat('plumb',this)">💧 PLUMBING</div>
+  <div class="cat-pill" onclick="filterCat('codes',this)">🔴 ERROR CODES</div>
+</div>
+
+<div class="topic-list" id="topic-list">
+
+<!-- ════════════════════════════════════════
+     AC · HOW THE REFRIGERANT CIRCUIT WORKS
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="ac" id="card-refcircuit">
+  <div class="card-hdr" onclick="toggleCard('refcircuit')">
+    <div class="card-ico">❄️</div>
+    <div class="card-info">
+      <div class="card-title">How AC cooling works</div>
+      <div class="card-sub">Refrigerant circuit · full cycle explained</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ Every AC fault starts here. Know the cycle, find the fault fast.</p></div>
+    <div class="diagram-wrap">
+      <!-- ANIMATED REFRIGERANT CIRCUIT SVG -->
+      <svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <!-- Indoor unit box -->
+        <rect x="10" y="80" width="100" height="100" rx="8" fill="#0d1f2d" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="60" y="100" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="9" font-weight="700">INDOOR</text>
+        <text x="60" y="112" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="9">UNIT</text>
+        <!-- Evaporator coil wavy lines -->
+        <path d="M25 125 Q35 118 45 125 Q55 132 65 125 Q75 118 85 125" fill="none" stroke="#60a5fa" stroke-width="2"/>
+        <path d="M25 138 Q35 131 45 138 Q55 145 65 138 Q75 131 85 138" fill="none" stroke="#60a5fa" stroke-width="2"/>
+        <text x="60" y="162" text-anchor="middle" fill="#3b82f6" font-family="monospace" font-size="8">EVAPORATOR</text>
+        <!-- Fan arrow -->
+        <text x="60" y="173" text-anchor="middle" fill="#60a5fa" font-size="14">⬆</text>
+        <text x="60" y="183" text-anchor="middle" fill="#555" font-family="monospace" font-size="7">COLD AIR OUT</text>
+
+        <!-- Outdoor unit box -->
+        <rect x="230" y="80" width="100" height="100" rx="8" fill="#1a0d0d" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="280" y="100" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="9" font-weight="700">OUTDOOR</text>
+        <text x="280" y="112" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="9">UNIT</text>
+        <!-- Condenser coil wavy lines -->
+        <path d="M245 125 Q255 118 265 125 Q275 132 285 125 Q295 118 305 125 Q315 118 325 125" fill="none" stroke="#f87171" stroke-width="2"/>
+        <path d="M245 138 Q255 131 265 138 Q275 145 285 138 Q295 131 305 138 Q315 131 325 138" fill="none" stroke="#f87171" stroke-width="2"/>
+        <text x="280" y="162" text-anchor="middle" fill="#ef4444" font-family="monospace" font-size="8">CONDENSER</text>
+        <!-- Fan -->
+        <text x="280" y="173" text-anchor="middle" fill="#f87171" font-size="14">⬆</text>
+        <text x="280" y="183" text-anchor="middle" fill="#555" font-family="monospace" font-size="7">HOT AIR OUT</text>
+
+        <!-- Compressor -->
+        <circle cx="280" cy="220" r="22" fill="#1a1a0a" stroke="#f59e0b" stroke-width="2"/>
+        <text x="280" y="216" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="8" font-weight="700">COMP</text>
+        <text x="280" y="228" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="7">HIGH ↑</text>
+
+        <!-- Expansion valve -->
+        <rect x="45" y="210" width="50" height="26" rx="5" fill="#0a1a0a" stroke="#22c97e" stroke-width="1.5"/>
+        <text x="70" y="224" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="8" font-weight="700">EXP.VALVE</text>
+        <text x="70" y="234" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="7">LOW ↓</text>
+
+        <!-- HOT refrigerant line (top) - gas going to condenser -->
+        <path d="M110 110 L230 110" fill="none" stroke="#ef4444" stroke-width="3" class="flow-hot"/>
+        <text x="170" y="103" text-anchor="middle" fill="#ef4444" font-family="monospace" font-size="8">HOT GAS →</text>
+
+        <!-- COLD refrigerant line (bottom) - liquid back to evap -->
+        <path d="M230 150 L110 150" fill="none" stroke="#60a5fa" stroke-width="3" class="flow-cold"/>
+        <text x="170" y="165" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="8">← COLD LIQUID</text>
+
+        <!-- Compressor to condenser -->
+        <path d="M280 198 L280 180" fill="none" stroke="#ef4444" stroke-width="2.5" class="flow-hot"/>
+
+        <!-- Condenser to expansion -->
+        <path d="M230 150 Q170 150 170 223 Q170 223 95 223" fill="none" stroke="#60a5fa" stroke-width="2" class="flow-cold"/>
+
+        <!-- Expansion to evaporator -->
+        <path d="M45 223 Q30 223 30 150" fill="none" stroke="#22c97e" stroke-width="2" class="flow-cold"/>
+
+        <!-- Evaporator to compressor -->
+        <path d="M30 180 Q30 240 280 240 L280 242" fill="none" stroke="#ef4444" stroke-width="2" class="flow-hot"/>
+
+        <!-- Labels -->
+        <text x="170" y="15" text-anchor="middle" fill="#555" font-family="monospace" font-size="9">TAP ANY PART TO LEARN IT</text>
+
+        <!-- Tappable hotspots -->
+        <g class="hotspot" onclick="showInfo('evap','Evaporator Coil','The cold part inside your home. Warm room air passes over it. Heat transfers from air into the cold refrigerant inside. Air comes out cold. Coil gets warm refrigerant back. If coil freezes — airflow is blocked (dirty filter or low gas).','TEST IT: Feel the suction pipe coming out — it should be cold and slightly sweating. If it\'s frozen solid, stop unit and check filter first.')">
+          <rect x="10" y="80" width="100" height="100" rx="8" fill="transparent" stroke="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo('comp','Compressor','The heart of the AC. It squeezes low-pressure gas from the indoor unit into high-pressure hot gas. This pressure increase raises the temperature so heat can be dumped outside. If the compressor fails — nothing works. Burnt relay coil on the contactor = compressor likely shorted. Check amps before condemning.','TEST IT: Clamp meter on compressor live wire. Running amps should be within 10% of nameplate RLA. High amps + trips = failing compressor or bad capacitor.')">
+          <circle cx="280" cy="220" r="22" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo('cond','Condenser Coil','The hot part outside. Hot gas enters, fan blows air across it, heat dumps to outside air, gas cools and becomes liquid. If coil is blocked with sand — heat cannot escape — high pressure trips unit. In UAE: wash condenser every 2-4 weeks in summer.','TEST IT: High-side gauge reading above 450 PSI at 45°C ambient = condenser blocked or fan not running. Wash and retest.')">
+          <rect x="230" y="80" width="100" height="100" rx="8" fill="transparent" stroke="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo('expv','Expansion Valve / Capillary','Drops the pressure of liquid refrigerant from high to low before it enters the evaporator. This pressure drop makes it very cold. Blocked capillary = starved evaporator = low suction pressure = icing. Symptom: suction pipe freezes, low suction PSI, high superheat.','TEST IT: Low suction PSI + iced suction pipe + warm air from indoor = expansion restriction OR low gas. Check gas level first.')">
+          <rect x="45" y="210" width="50" height="26" rx="5" fill="transparent" stroke="transparent"/>
+        </g>
+      </svg>
+      <div class="diagram-hint">TAP ANY PART FOR DETAILS</div>
+    </div>
+    <div class="info-panel" id="info-panel">
+      <span class="info-close" onclick="closeInfo()">✕ close</span>
+      <div class="info-panel-ttl" id="info-ttl">—</div>
+      <div class="info-panel-body" id="info-body">—</div>
+      <div class="info-test" id="info-test-wrap"><div class="info-test-lbl">HOW TO TEST</div><div class="info-test-txt" id="info-test">—</div></div>
+    </div>
+    <div class="layers">
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">What does the AC actually do?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">AC does <strong>not create cold</strong>. It moves heat. It takes heat from inside your room and dumps it outside. That's it. The refrigerant is the carrier — it picks up heat inside and drops it outside. Cold is just what's left when heat is removed.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">Why does low gas cause icing on the pipe?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">Low refrigerant = low pressure in evaporator = lower boiling point = coil gets too cold = moisture in air freezes on it. Ice builds up, blocks airflow completely. Now nothing works. <strong class="highlight">Fix: find the leak first. Never just top up.</strong> Topping up without fixing the leak = same problem in 2 weeks.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">Why does high ambient temperature affect the AC so much?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">The condenser dumps heat to outside air. At 48°C outside, it is much harder to dump heat than at 25°C. The compressor works harder, pressure rises, efficiency drops. <span class="warn">UAE summer = AC working at absolute maximum capacity every day.</span> This is why capacitors, contactors, and fan motors fail faster here than anywhere else.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n4">4</div><div class="layer-q">Burnt contactor relay coil — what does it mean?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">The contactor coil pulls in the contacts to start the compressor. If the compressor is <span class="danger">internally shorted</span> it draws massive current → contactor overheats → coil burns. <strong>A burnt contactor coil is a symptom, not the root cause.</strong> Replace contactor, then check compressor amps immediately on startup. If amps spike above RLA = compressor is dying. If amps are normal = contactor just aged out.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n5">5</div><div class="layer-q">Compressor won't start — exact test sequence</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text"><strong>Do in this order:</strong><br><br>1. Check capacitor first (C/HERM terminal) — most common cause<br>2. Check contactor contacts for pitting or burning<br>3. Measure supply voltage at compressor terminals<br>4. Megger test compressor windings (should be &gt;1MΩ to earth)<br>5. Check compressor winding resistance (R-S, R-C, S-C) — all should be balanced<br><br><span class="danger">If windings show short to earth → compressor dead. Do not replace capacitor and leave. Client will call back tomorrow.</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     AC · CAPACITOR — HOW IT WORKS
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="ac" id="card-capacitor">
+  <div class="card-hdr" onclick="toggleCard('capacitor')">
+    <div class="card-ico">⚙️</div>
+    <div class="card-info">
+      <div class="card-title">Capacitor — C / HERM / FAN</div>
+      <div class="card-sub">Most common UAE AC part failure · AED 20–40</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ Carry two spares on your van. Replacing one takes 5 minutes.</p></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <!-- Capacitor can body -->
+        <rect x="110" y="30" width="80" height="120" rx="12" fill="#1a2a1a" stroke="#22c97e" stroke-width="2"/>
+        <!-- Top dome -->
+        <ellipse cx="150" cy="30" rx="40" ry="8" fill="#1e3a1e" stroke="#22c97e" stroke-width="1.5"/>
+        <!-- Rating text -->
+        <text x="150" y="75" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="13" font-weight="700">35/5µF</text>
+        <text x="150" y="92" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="10">440VAC</text>
+        <text x="150" y="108" text-anchor="middle" fill="#555" font-family="monospace" font-size="8">DUAL RUN</text>
+        <!-- Warning symbol for bulged cap -->
+        <text x="150" y="130" text-anchor="middle" fill="#333" font-size="16">⚡</text>
+
+        <!-- THREE TERMINALS on top -->
+        <!-- C terminal -->
+        <circle cx="130" cy="22" r="8" fill="#f59e0b" stroke="#fbbf24" stroke-width="2"/>
+        <text x="130" y="26" text-anchor="middle" fill="#000" font-family="monospace" font-size="9" font-weight="700">C</text>
+        <!-- HERM terminal -->
+        <circle cx="150" cy="18" r="8" fill="#ef4444" stroke="#f87171" stroke-width="2"/>
+        <text x="150" y="22" text-anchor="middle" fill="#fff" font-family="monospace" font-size="7" font-weight="700">HERM</text>
+        <!-- FAN terminal -->
+        <circle cx="170" cy="22" r="8" fill="#3b82f6" stroke="#60a5fa" stroke-width="2"/>
+        <text x="170" y="26" text-anchor="middle" fill="#fff" font-family="monospace" font-size="8" font-weight="700">FAN</text>
+
+        <!-- Wires going down -->
+        <line x1="130" y1="30" x2="130" y2="170" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <line x1="150" y1="26" x2="150" y2="170" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <line x1="170" y1="30" x2="170" y2="170" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="5,3"/>
+
+        <!-- Connection points at bottom -->
+        <!-- C goes to contactor L2 -->
+        <rect x="80" y="170" width="50" height="20" rx="4" fill="#f59e0b22" stroke="#f59e0b" stroke-width="1"/>
+        <text x="105" y="184" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="8">CONTACTOR</text>
+        <line x1="130" y1="170" x2="105" y2="170" stroke="#f59e0b" stroke-width="2"/>
+
+        <!-- HERM goes to compressor -->
+        <rect x="120" y="190" width="60" height="20" rx="4" fill="#ef444422" stroke="#ef4444" stroke-width="1"/>
+        <text x="150" y="204" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="8">COMPRESSOR</text>
+        <line x1="150" y1="170" x2="150" y2="190" stroke="#ef4444" stroke-width="2"/>
+
+        <!-- FAN goes to fan motor -->
+        <rect x="175" y="170" width="50" height="20" rx="4" fill="#3b82f622" stroke="#3b82f6" stroke-width="1"/>
+        <text x="200" y="184" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="8">FAN MOTOR</text>
+        <line x1="170" y1="170" x2="200" y2="170" stroke="#3b82f6" stroke-width="2"/>
+
+        <!-- Tappable zones -->
+        <g class="hotspot" onclick="showInfo('cap-c','C Terminal (Common)','C connects to the main power supply — usually from the contactor output. It is shared between both the compressor and fan sections of the capacitor. This is the common reference point.','If C wire is loose or missing — neither compressor nor fan will start. Check C terminal first if nothing runs.')">
+          <circle cx="130" cy="22" r="14" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo('cap-herm','HERM Terminal (Compressor)','HERM stands for Hermetic — the sealed compressor. This terminal provides the phase-shifted current the compressor motor needs to start spinning. Without it the compressor hums but cannot turn.','TEST: Disconnect HERM wire, measure capacitance between C and HERM. Should be within ±10% of rated value (e.g. 35µF ± 3.5µF). Below range = replace.')">
+          <circle cx="150" cy="18" r="14" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo('cap-fan','FAN Terminal (Outdoor Fan)','FAN provides starting current to the outdoor condenser fan motor. If this section fails — compressor runs but outdoor fan stops — condenser overheats — high pressure trip.','TEST: Measure between C and FAN. Should match fan section rating (usually 5µF or 7.5µF). Fan hums but doesn\'t spin = this terminal has failed.')">
+          <circle cx="170" cy="22" r="14" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo('cap-body','Signs of a Failed Capacitor','1. Top of capacitor is bulging upward (should be flat)\n2. Brown residue around terminals\n3. Capacitor feels very hot after running\n4. Compressor hums but does not start\n5. Fan runs slow or not at all\n6. Measured capacitance 20%+ below rating','Visual inspection first. Bulged top = replace immediately. Do not re-energise a bulged capacitor.')">
+          <rect x="110" y="30" width="80" height="120" rx="12" fill="transparent"/>
+        </g>
+      </svg>
+      <div class="diagram-hint">TAP TERMINALS FOR DETAILS</div>
+    </div>
+    <div class="info-panel" id="info-panel-cap">
+      <span class="info-close" onclick="closeInfo('cap')">✕</span>
+      <div class="info-panel-ttl" id="info-ttl-cap">—</div>
+      <div class="info-panel-body" id="info-body-cap">—</div>
+      <div class="info-test" id="info-test-wrap-cap"><div class="info-test-lbl">HOW TO TEST</div><div class="info-test-txt" id="info-test-cap">—</div></div>
+    </div>
+    <div class="layers">
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">What does a capacitor actually do?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">A motor needs a strong kick to start spinning from zero. The capacitor stores electrical charge and releases it all at once — like a spring being released. This creates a second phase of power that makes the motor torque up and start. Without it, the motor tries to start, hums, draws huge current, and either trips the MCB or burns the winding.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">Why do UAE capacitors fail so fast?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">Heat is the enemy of capacitors. Every 10°C above rated temperature <strong>halves the capacitor lifespan</strong>. Outdoor unit panels in UAE reach 70–80°C in summer. A capacitor rated for 10 years in Europe lasts 2–3 years here. <span class="highlight">This is the single most common part failure in UAE AC systems.</span> Always carry spares.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">Can I replace just one section of a dual capacitor?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">No. Dual run capacitors are one sealed unit. If one section fails — replace the whole capacitor. You can temporarily use two separate single capacitors if you cannot get the exact dual type, but match the µF ratings exactly. <span class="warn">Never oversize a capacitor — higher µF draws higher current and can burn the motor winding.</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     AC · DAIKIN ERROR CODES
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="codes" id="card-errorcodes">
+  <div class="card-hdr" onclick="toggleCard('errorcodes')">
+    <div class="card-ico">🔴</div>
+    <div class="card-info">
+      <div class="card-title">AC Error Codes</div>
+      <div class="card-sub">Daikin · LG · Gree · Super General · O General</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ Code shows on indoor display or remote. Find your brand below.</p></div>
+    <div class="brand-tabs">
+      <div class="brand-tab on" onclick="switchBrand('daikin',this)">Daikin</div>
+      <div class="brand-tab" onclick="switchBrand('lg',this)">LG</div>
+      <div class="brand-tab" onclick="switchBrand('gree',this)">Gree</div>
+      <div class="brand-tab" onclick="switchBrand('sg',this)">Super General</div>
+      <div class="brand-tab" onclick="switchBrand('og',this)">O General</div>
+      <div class="brand-tab" onclick="switchBrand('r22',this)">R22 Systems</div>
+    </div>
+
+    <!-- DAIKIN -->
+    <div class="brand-content on" id="brand-daikin">
+      <table class="err-table">
+        <tr><th>CODE</th><th>MEANING</th><th>FIRST CHECK</th></tr>
+        <tr><td class="err-code">A1</td><td>PCB fault — indoor</td><td>Check 5V power to PCB. Swap board if supply OK</td></tr>
+        <tr><td class="err-code">A3</td><td>Drain level fault</td><td>Float switch stuck up. Flush drain line. Check float wiring</td></tr>
+        <tr><td class="err-code">A5</td><td>Freeze protection / high temp coil</td><td>Check airflow — filter blocked or fan not running</td></tr>
+        <tr><td class="err-code">C4</td><td>Liquid pipe thermistor fault</td><td>Disconnect thermistor, measure resistance. 10kΩ at 25°C normal</td></tr>
+        <tr><td class="err-code">C9</td><td>Suction thermistor fault</td><td>Same as C4 — check resistance and connector</td></tr>
+        <tr><td class="err-code">E3 <span class="err-sev-h">●</span></td><td>High pressure trip</td><td>Dirty condenser coil. Check outdoor fan running. Check pressures</td></tr>
+        <tr><td class="err-code">E4 <span class="err-sev-h">●</span></td><td>Low pressure trip</td><td>Low gas. Check suction PSI. Find leak before recharging</td></tr>
+        <tr><td class="err-code">E5 <span class="err-sev-h">●</span></td><td>Compressor overload</td><td>Check amps. Check capacitor. Check supply voltage</td></tr>
+        <tr><td class="err-code">E6</td><td>Compressor startup fault</td><td>Capacitor first. Then contactor. Then compressor windings</td></tr>
+        <tr><td class="err-code">E7</td><td>Outdoor fan motor fault</td><td>Check fan capacitor (FAN terminal). Check motor windings</td></tr>
+        <tr><td class="err-code">E8</td><td>Input overcurrent</td><td>Check supply voltage. Check for earth fault on compressor</td></tr>
+        <tr><td class="err-code">F3 <span class="err-sev-h">●</span></td><td>Discharge pipe overtemp</td><td>Low gas or blocked condenser. Check both before anything else</td></tr>
+        <tr><td class="err-code">H6</td><td>Outdoor fan position sensor</td><td>DC fan motor fault. Check motor and PCB connector</td></tr>
+        <tr><td class="err-code">U0</td><td>Refrigerant shortage</td><td>Check suction PSI. Find leak. Do not just top up</td></tr>
+        <tr><td class="err-code">U2</td><td>Low voltage / power fault</td><td>Measure supply voltage. Should be 220V ±10%</td></tr>
+        <tr><td class="err-code">U4</td><td>Comms fault indoor/outdoor</td><td>Check signal wire connection. Check for earth on signal wire</td></tr>
+      </table>
+    </div>
+
+    <!-- LG -->
+    <div class="brand-content" id="brand-lg">
+      <table class="err-table">
+        <tr><th>CODE</th><th>MEANING</th><th>FIRST CHECK</th></tr>
+        <tr><td class="err-code">CH01</td><td>Indoor coil sensor fault</td><td>Check thermistor resistance — should be ~10kΩ at 25°C</td></tr>
+        <tr><td class="err-code">CH02</td><td>Outdoor coil sensor fault</td><td>Same as CH01 — outdoor thermistor</td></tr>
+        <tr><td class="err-code">CH03</td><td>Discharge temp sensor</td><td>Check discharge pipe thermistor connector and resistance</td></tr>
+        <tr><td class="err-code">CH05 <span class="err-sev-h">●</span></td><td>Communication error</td><td>Check signal wire (2-core) between indoor and outdoor. Check earth</td></tr>
+        <tr><td class="err-code">CH10</td><td>Indoor fan motor fault</td><td>Check fan motor connector. Check capacitor. Check motor windings</td></tr>
+        <tr><td class="err-code">CH21 <span class="err-sev-h">●</span></td><td>High pressure protection</td><td>Dirty condenser. Fan running? Check pressures with gauges</td></tr>
+        <tr><td class="err-code">CH22</td><td>Low pressure protection</td><td>Low refrigerant. Check suction PSI. Leak test</td></tr>
+        <tr><td class="err-code">CH23</td><td>Compressor overload</td><td>Check amps. Capacitor. Supply voltage</td></tr>
+        <tr><td class="err-code">CH38 <span class="err-sev-h">●</span></td><td>Inverter IPM fault</td><td>Inverter board issue. Check DC bus voltage. Usually board replacement</td></tr>
+        <tr><td class="err-code">CH44</td><td>Outdoor temp sensor</td><td>Outdoor ambient thermistor — check resistance and connector</td></tr>
+        <tr><td class="err-code">CH67 <span class="err-sev-h">●</span></td><td>Compressor current fault</td><td>Check CT sensor connector. Check compressor amps directly</td></tr>
+      </table>
+    </div>
+
+    <!-- GREE -->
+    <div class="brand-content" id="brand-gree">
+      <table class="err-table">
+        <tr><th>CODE</th><th>MEANING</th><th>FIRST CHECK</th></tr>
+        <tr><td class="err-code">E1 <span class="err-sev-h">●</span></td><td>High pressure protection</td><td>Dirty condenser. Outdoor fan running? Check pressures</td></tr>
+        <tr><td class="err-code">E2</td><td>Anti-freeze protection</td><td>Dirty filter. Low airflow. Low gas. Check all three</td></tr>
+        <tr><td class="err-code">E3</td><td>Low pressure protection</td><td>Low refrigerant gas. Leak test before topping up</td></tr>
+        <tr><td class="err-code">E4</td><td>Compressor exhaust overtemp</td><td>Low gas or blocked condenser. Check both</td></tr>
+        <tr><td class="err-code">E5 <span class="err-sev-h">●</span></td><td>Compressor overload / overcurrent</td><td>Capacitor first. Check supply voltage. Check amps</td></tr>
+        <tr><td class="err-code">E6</td><td>Communication fault</td><td>Signal wire between units — check connection and polarity</td></tr>
+        <tr><td class="err-code">E7</td><td>Mode conflict</td><td>Multiple indoor units in conflicting modes — reset all</td></tr>
+        <tr><td class="err-code">E8</td><td>Overcurrent input</td><td>Check supply. Earth fault on compressor?</td></tr>
+        <tr><td class="err-code">F0 <span class="err-sev-h">●</span></td><td>Refrigerant leak detection</td><td>Check all joints with electronic leak detector</td></tr>
+        <tr><td class="err-code">F1</td><td>Ambient temp sensor fault</td><td>Indoor ambient thermistor — check connector and resistance</td></tr>
+        <tr><td class="err-code">F2</td><td>Indoor coil sensor fault</td><td>Evaporator thermistor — check resistance ~10kΩ</td></tr>
+        <tr><td class="err-code">H3</td><td>Compressor overload protector</td><td>Internal OLP opened. Let cool 30 min. Check amps on restart</td></tr>
+        <tr><td class="err-code">H5</td><td>IPM protection</td><td>Inverter module fault. Check DC voltage. Usually board failure</td></tr>
+        <tr><td class="err-code">C5</td><td>Capacitor fault</td><td>Replace capacitor — check C/HERM/FAN values</td></tr>
+      </table>
+    </div>
+
+    <!-- SUPER GENERAL -->
+    <div class="brand-content" id="brand-sg">
+      <table class="err-table">
+        <tr><th>CODE</th><th>MEANING</th><th>FIRST CHECK</th></tr>
+        <tr><td class="err-code">E1 <span class="err-sev-h">●</span></td><td>High pressure protection</td><td>Condenser dirty. Fan fault. Check pressures</td></tr>
+        <tr><td class="err-code">E2</td><td>Freeze protection</td><td>Filter blocked. Low gas. Check airflow first</td></tr>
+        <tr><td class="err-code">E3</td><td>Low pressure protection</td><td>Low refrigerant — leak test and recharge</td></tr>
+        <tr><td class="err-code">E4</td><td>Discharge overtemp</td><td>Low gas most likely. Check pressures</td></tr>
+        <tr><td class="err-code">E5 <span class="err-sev-h">●</span></td><td>Compressor overload</td><td>Capacitor, supply voltage, amps</td></tr>
+        <tr><td class="err-code">E6</td><td>Fan motor fault</td><td>Check fan capacitor and motor windings</td></tr>
+        <tr><td class="err-code">E7</td><td>Communication fault</td><td>Signal wiring between indoor/outdoor</td></tr>
+        <tr><td class="err-code">E8</td><td>Outdoor temp sensor</td><td>Outdoor ambient thermistor resistance</td></tr>
+        <tr><td class="err-code">E9</td><td>Indoor coil sensor</td><td>Evaporator thermistor — check resistance</td></tr>
+        <tr><td class="err-code">P1</td><td>Supply voltage fault</td><td>Measure input voltage — should be 220V ±10%</td></tr>
+        <tr><td class="err-code">P2</td><td>Indoor fan fault</td><td>Indoor fan motor and capacitor</td></tr>
+        <tr><td class="err-code">P3 <span class="err-sev-h">●</span></td><td>Earth leakage detected</td><td>Insulation resistance test — find leaking component</td></tr>
+        <tr><td class="err-code">P4</td><td>Drain pump fault</td><td>Check drain pump motor and float switch</td></tr>
+      </table>
+    </div>
+
+    <!-- O GENERAL -->
+    <div class="brand-content" id="brand-og">
+      <table class="err-table">
+        <tr><th>CODE</th><th>MEANING</th><th>FIRST CHECK</th></tr>
+        <tr><td class="err-code">00 (LED)</td><td>No fault — normal operation</td><td>—</td></tr>
+        <tr><td class="err-code">01 flash</td><td>Indoor temp sensor fault</td><td>Room thermistor — check resistance and connector</td></tr>
+        <tr><td class="err-code">02 flash</td><td>Indoor coil sensor fault</td><td>Evaporator thermistor</td></tr>
+        <tr><td class="err-code">03 flash <span class="err-sev-h">●</span></td><td>Outdoor coil high temp</td><td>Dirty condenser. Fan not running. Check pressures</td></tr>
+        <tr><td class="err-code">04 flash</td><td>Outdoor temp sensor</td><td>Outdoor ambient thermistor</td></tr>
+        <tr><td class="err-code">05 flash <span class="err-sev-h">●</span></td><td>Communication fault</td><td>Indoor/outdoor signal wire — check connections</td></tr>
+        <tr><td class="err-code">06 flash <span class="err-sev-h">●</span></td><td>Compressor protection trip</td><td>Capacitor first. Then amps. Then windings</td></tr>
+        <tr><td class="err-code">07 flash</td><td>Fan motor fault</td><td>Outdoor fan — check capacitor and motor</td></tr>
+        <tr><td class="err-code">08 flash <span class="err-sev-h">●</span></td><td>High pressure trip</td><td>Dirty condenser. Fan. Overcharge. Check all</td></tr>
+        <tr><td class="err-code">09 flash <span class="err-sev-h">●</span></td><td>Low pressure trip</td><td>Low gas — leak test first</td></tr>
+        <tr><td class="err-code">10 flash <span class="err-sev-h">●</span></td><td>Discharge temp high</td><td>Low gas or blocked condenser</td></tr>
+        <tr><td class="err-code">P1</td><td>Low voltage</td><td>Measure supply — check for voltage drop under load</td></tr>
+        <tr><td class="err-code">P4</td><td>Drain level alarm</td><td>Float switch up — drain blocked or float stuck</td></tr>
+      </table>
+    </div>
+
+    <!-- R22 SYSTEMS -->
+    <div class="brand-content" id="brand-r22">
+      <div class="layers">
+        <div class="layer" onclick="toggleLayer(this)">
+          <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">What is R22 and why is it being phased out?</div><div class="layer-chevron">▶</div></div>
+          <div class="layer-content"><div class="layer-text">R22 (Freon) is an old refrigerant that damages the ozone layer. It has been banned for new equipment since 2015 in most countries. In UAE many older villas (pre-2010) still run R22 systems. <span class="warn">You cannot legally purchase new R22 in UAE — only recycled R22 from recovery cylinders.</span></div></div>
+        </div>
+        <div class="layer" onclick="toggleLayer(this)">
+          <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">R22 pressure readings — what is normal?</div><div class="layer-chevron">▶</div></div>
+          <div class="layer-content"><div class="layer-text"><strong>At 35°C ambient:</strong><br>Suction: 60–75 PSI<br>Discharge: 220–260 PSI<br><br><strong>At 45°C ambient (UAE summer):</strong><br>Suction: 65–80 PSI<br>Discharge: 250–300 PSI<br><br><span class="danger">Much lower pressures than R410A. Do not confuse systems. Wrong refrigerant = destroyed compressor.</span></div></div>
+        </div>
+        <div class="layer" onclick="toggleLayer(this)">
+          <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">Should I convert an R22 system to R410A?</div><div class="layer-chevron">▶</div></div>
+          <div class="layer-content"><div class="layer-text">No. R410A runs at much higher pressures than R22. Old R22 copper piping and components cannot handle R410A pressure — they will fail or leak. <strong>If an R22 system needs full recharge — recommend full system replacement to client.</strong> Topping up old R22 with recycled gas buys time, nothing more.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ELECTRICAL · DB PANEL / MCB SYSTEM
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="elec" id="card-dbpanel">
+  <div class="card-hdr" onclick="toggleCard('dbpanel')">
+    <div class="card-ico">⚡</div>
+    <div class="card-info">
+      <div class="card-title">Distribution Board — how it works</div>
+      <div class="card-sub">DEWA supply → MCBs → villa circuits</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ Every electrical fault in the villa starts here. Know this panel.</p></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" width="100%">
+        <!-- DB Box outline -->
+        <rect x="20" y="20" width="260" height="240" rx="6" fill="#111" stroke="#333" stroke-width="2"/>
+        <text x="150" y="38" text-anchor="middle" fill="#555" font-family="monospace" font-size="9" font-weight="700">DISTRIBUTION BOARD</text>
+
+        <!-- DEWA incoming supply -->
+        <rect x="30" y="45" width="70" height="35" rx="4" fill="#ef444422" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="65" y="60" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="8" font-weight="700">DEWA</text>
+        <text x="65" y="72" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="7">220V IN</text>
+
+        <!-- Main MCB -->
+        <rect x="115" y="45" width="70" height="35" rx="4" fill="#f59e0b22" stroke="#f59e0b" stroke-width="2"/>
+        <text x="150" y="59" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="8" font-weight="700">MAIN MCB</text>
+        <text x="150" y="71" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="7">63A / 100A</text>
+
+        <!-- DEWA to Main -->
+        <line x1="100" y1="62" x2="115" y2="62" stroke="#ef4444" stroke-width="2.5" class="elec-flow"/>
+
+        <!-- Busbar -->
+        <rect x="30" y="95" width="240" height="8" rx="2" fill="#333" stroke="#555" stroke-width="1"/>
+        <text x="150" y="108" text-anchor="middle" fill="#444" font-family="monospace" font-size="7">LIVE BUSBAR</text>
+        <!-- Main to busbar -->
+        <line x1="150" y1="80" x2="150" y2="95" stroke="#f59e0b" stroke-width="2"/>
+
+        <!-- Individual MCBs - row 1 -->
+        <!-- AC MCB 1 -->
+        <rect x="30" y="118" width="42" height="50" rx="4" fill="#3b82f618" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="51" y="135" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="7" font-weight="700">AC 1</text>
+        <text x="51" y="146" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="8">20A</text>
+        <rect x="44" y="150" width="14" height="8" rx="2" fill="#22c97e"/>
+        <text x="51" y="158" text-anchor="middle" fill="#000" font-family="monospace" font-size="6">ON</text>
+        <line x1="51" y1="118" x2="51" y2="103" stroke="#3b82f6" stroke-width="1.5"/>
+
+        <!-- AC MCB 2 -->
+        <rect x="80" y="118" width="42" height="50" rx="4" fill="#3b82f618" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="101" y="135" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="7" font-weight="700">AC 2</text>
+        <text x="101" y="146" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="8">20A</text>
+        <rect x="94" y="150" width="14" height="8" rx="2" fill="#22c97e"/>
+        <text x="101" y="158" text-anchor="middle" fill="#000" font-family="monospace" font-size="6">ON</text>
+        <line x1="101" y1="118" x2="101" y2="103" stroke="#3b82f6" stroke-width="1.5"/>
+
+        <!-- Lights MCB -->
+        <rect x="130" y="118" width="42" height="50" rx="4" fill="#22c97e18" stroke="#22c97e" stroke-width="1.5"/>
+        <text x="151" y="135" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="7" font-weight="700">LIGHTS</text>
+        <text x="151" y="146" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="8">10A</text>
+        <rect x="144" y="150" width="14" height="8" rx="2" fill="#22c97e"/>
+        <text x="151" y="158" text-anchor="middle" fill="#000" font-family="monospace" font-size="6">ON</text>
+        <line x1="151" y1="118" x2="151" y2="103" stroke="#22c97e" stroke-width="1.5"/>
+
+        <!-- Sockets MCB -->
+        <rect x="180" y="118" width="42" height="50" rx="4" fill="#a855f718" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="201" y="132" text-anchor="middle" fill="#c084fc" font-family="monospace" font-size="7" font-weight="700">SOCKETS</text>
+        <text x="201" y="143" text-anchor="middle" fill="#c084fc" font-family="monospace" font-size="8">16A</text>
+        <rect x="194" y="150" width="14" height="8" rx="2" fill="#22c97e"/>
+        <text x="201" y="158" text-anchor="middle" fill="#000" font-family="monospace" font-size="6">ON</text>
+        <line x1="201" y1="118" x2="201" y2="103" stroke="#a855f7" stroke-width="1.5"/>
+
+        <!-- Timer/Garden MCB — shown tripped -->
+        <rect x="230" y="118" width="42" height="50" rx="4" fill="#ef444418" stroke="#ef4444" stroke-width="2"/>
+        <text x="251" y="132" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="7" font-weight="700">GARDEN</text>
+        <text x="251" y="143" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="8">10A</text>
+        <rect x="244" y="150" width="14" height="8" rx="2" fill="#ef4444"/>
+        <text x="251" y="158" text-anchor="middle" fill="#fff" font-family="monospace" font-size="5">TRIP</text>
+        <line x1="251" y1="118" x2="251" y2="103" stroke="#ef4444" stroke-width="1.5"/>
+        <!-- Blinking indicator -->
+        <circle cx="268" cy="122" r="4" fill="#ef4444" class="pulse-dot"/>
+
+        <!-- Neutral bar -->
+        <rect x="30" y="185" width="240" height="8" rx="2" fill="#555" stroke="#888" stroke-width="1"/>
+        <text x="150" y="200" text-anchor="middle" fill="#888" font-family="monospace" font-size="7">NEUTRAL BAR</text>
+
+        <!-- Earth bar -->
+        <rect x="30" y="215" width="240" height="8" rx="2" fill="#22c97e22" stroke="#22c97e" stroke-width="1"/>
+        <text x="150" y="230" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="7">EARTH BAR</text>
+
+        <!-- Timer relay -->
+        <rect x="60" y="245" width="80" height="18" rx="4" fill="#f59e0b18" stroke="#f59e0b" stroke-width="1"/>
+        <text x="100" y="257" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="7">TIMER RELAY (REH1S)</text>
+
+        <!-- Tappable zones -->
+        <g class="hotspot" onclick="showInfo2('dewa','DEWA Supply — 220V Single Phase','UAE residential supply is 220–240V AC, 50Hz, single phase. DEWA is responsible for everything up to and including the energy meter. After the meter — it is the building owner\'s responsibility. The supply comes in as Live (brown/red) and Neutral (blue) plus Earth (green/yellow).','If no power at all — check DEWA meter first. Has it tripped? Has credit run out on a prepaid meter? Call DEWA on 991 if meter issue.')">
+          <rect x="30" y="45" width="70" height="35" rx="4" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo2('main','Main MCB — The Master Switch','The main MCB is rated above all individual circuit MCBs combined. Common ratings: 63A for small villas, 100A for larger. If the main trips, all power goes off. Causes: total overload (too many high-draw appliances), severe earth fault, main MCB aged and weak.','TEST: Reset main MCB. If it holds — a sub-circuit MCB should have also tripped. If main trips again immediately — earth fault on incoming supply. Call DEWA.')">
+          <rect x="115" y="45" width="70" height="35" rx="4" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo2('tripped','Tripped MCB — Garden Circuit','Red MCB = tripped. This garden circuit has tripped. Could be: timer relay contacts burnt, garden light short, water in outdoor fitting. First: switch off garden lights manually. Reset MCB. If holds — problem is in the timer relay. If trips again immediately — short circuit in wiring.','SEQUENCE: 1. Switch off all garden lights 2. Reset MCB 3. Holds = timer or control issue 4. Trips = wiring short. Isolate section by section.')">
+          <rect x="230" y="118" width="42" height="50" rx="4" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo2('neutral','Neutral Bar','All circuit neutrals return here. Loose neutral = intermittent faults, flickering lights, equipment damage. In UAE heat, neutral bar screws work loose over time — vibration from AC units and thermal cycling. Check all neutral connections are tight annually.','SYMPTOM: Lights flickering, appliances behaving strangely, one phase seems low voltage = loose neutral. Tighten all neutral bar terminals.')">
+          <rect x="30" y="185" width="240" height="8" rx="2" fill="transparent"/>
+        </g>
+      </svg>
+      <div class="diagram-hint">TAP ANY COMPONENT FOR DETAILS</div>
+    </div>
+    <div class="info-panel" id="info-panel2">
+      <span class="info-close" onclick="closeInfo2()">✕</span>
+      <div class="info-panel-ttl" id="info-ttl2">—</div>
+      <div class="info-panel-body" id="info-body2">—</div>
+      <div class="info-test" id="info-test-wrap2"><div class="info-test-lbl">WHAT TO DO</div><div class="info-test-txt" id="info-test2">—</div></div>
+    </div>
+    <div class="layers">
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">What is the difference between MCB and RCBO?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text"><strong>MCB</strong> (Miniature Circuit Breaker) — protects against overload and short circuit only. It measures current.<br><br><strong>RCBO</strong> (Residual Current Breaker with Overload) — does everything an MCB does PLUS detects earth faults as small as 30mA. It detects current leaking to earth — which can kill a person.<br><br><span class="highlight">In UAE, bathrooms and outdoor circuits should have RCBO protection by regulation.</span></div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">How to identify circuits in an unlabelled DB</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">Switch off all MCBs except main. Turn on first sub-MCB. Walk through villa noting what came on. Label it. Repeat for each MCB. <strong>Always do this with someone else present</strong> — one person at DB, one walking the villa communicating by phone. <span class="warn">Never leave a client's DB unlabelled after you've identified circuits.</span> Use a marker and tape. 10 minutes now saves 2 hours next time.</div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">Single phase vs two-way switch wiring</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          <strong>Single switch:</strong> Live → switch → lamp → neutral. Simple.<br><br>
+          <strong>Two-way switch (staircase):</strong> Two switches control one light. Live goes to common (C) of switch 1. Strappers (L1, L2) connect both switches. Neutral goes direct to lamp. Output from switch 2 common goes to lamp live.<br><br>
+          <span class="highlight">Both switches must be two-way type — they have 3 terminals (C, L1, L2) not 2.</span><br><br>
+          <span class="warn">Fault: light works from one switch only = one switch is single-way type. Replace it with two-way.</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PLUMBING · DEWA WATER SYSTEM
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="plumb" id="card-water">
+  <div class="card-hdr" onclick="toggleCard('water')">
+    <div class="card-ico">💧</div>
+    <div class="card-info">
+      <div class="card-title">DEWA water system — full villa flow</div>
+      <div class="card-sub">Meter → ground tank → pump → roof tank → taps</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ No water at taps? This diagram shows every point that can fail.</p></div>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg" width="100%">
+
+        <!-- DEWA Street main -->
+        <rect x="10" y="10" width="80" height="28" rx="5" fill="#1a0d2e" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="50" y="22" text-anchor="middle" fill="#c084fc" font-family="monospace" font-size="8" font-weight="700">DEWA MAIN</text>
+        <text x="50" y="32" text-anchor="middle" fill="#c084fc" font-family="monospace" font-size="7">STREET SUPPLY</text>
+
+        <!-- DEWA Meter -->
+        <rect x="110" y="10" width="70" height="28" rx="5" fill="#1a0d2e" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="145" y="22" text-anchor="middle" fill="#c084fc" font-family="monospace" font-size="8" font-weight="700">DEWA METER</text>
+        <text x="145" y="32" text-anchor="middle" fill="#c084fc" font-family="monospace" font-size="7">BOUNDARY WALL</text>
+
+        <!-- DEWA responsible arrow -->
+        <line x1="90" y1="24" x2="110" y2="24" stroke="#a855f7" stroke-width="2" class="water-flow"/>
+        <text x="100" y="20" text-anchor="middle" fill="#a855f7" font-family="monospace" font-size="7">←DEWA→</text>
+
+        <!-- PRV + Strainer -->
+        <rect x="200" y="10" width="90" height="28" rx="5" fill="#0d1f2d" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="245" y="22" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="7" font-weight="700">STRAINER + PRV</text>
+        <text x="245" y="32" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="7">OWNER INSTALLS</text>
+        <line x1="180" y1="24" x2="200" y2="24" stroke="#3b82f6" stroke-width="2" class="water-flow"/>
+
+        <!-- Ground storage tank -->
+        <rect x="90" y="80" width="120" height="80" rx="8" fill="#0a1628" stroke="#3b82f6" stroke-width="2"/>
+        <text x="150" y="105" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="9" font-weight="700">GROUND TANK</text>
+        <text x="150" y="118" text-anchor="middle" fill="#3b82f6" font-family="monospace" font-size="8">GRP / Concrete</text>
+        <!-- Water level in tank -->
+        <rect x="92" y="130" width="116" height="28" rx="0" fill="#3b82f618"/>
+        <text x="150" y="148" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="8">Water level</text>
+        <text x="150" y="158" text-anchor="middle" fill="#555" font-family="monospace" font-size="7">Usually under villa or garden</text>
+
+        <!-- DEWA supply pipe going down to ground tank -->
+        <line x1="145" y1="38" x2="145" y2="80" stroke="#3b82f6" stroke-width="2.5" class="water-flow"/>
+        <text x="130" y="62" text-anchor="middle" fill="#3b82f6" font-family="monospace" font-size="7">INLET</text>
+        <!-- Ball valve on inlet -->
+        <circle cx="145" cy="70" r="5" fill="#f59e0b" stroke="#fbbf24" stroke-width="1"/>
+        <text x="155" y="73" fill="#fbbf24" font-family="monospace" font-size="6">VALVE</text>
+
+        <!-- Transfer pump -->
+        <rect x="55" y="190" width="70" height="35" rx="6" fill="#0a1a0a" stroke="#22c97e" stroke-width="2"/>
+        <text x="90" y="207" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="9" font-weight="700">PUMP</text>
+        <text x="90" y="219" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="7">Transfer pump</text>
+
+        <!-- Ground tank to pump -->
+        <line x1="110" y1="160" x2="90" y2="190" stroke="#22c97e" stroke-width="2.5" class="water-flow"/>
+
+        <!-- Float switch on ground tank -->
+        <circle cx="210" cy="140" r="8" fill="#f59e0b22" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="210" y="144" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="7">FS</text>
+        <text x="230" y="144" fill="#f59e0b" font-family="monospace" font-size="6">FLOAT SW</text>
+
+        <!-- Roof tank -->
+        <rect x="170" y="60" width="120" height="65" rx="8" fill="#0d1f2d" stroke="#60a5fa" stroke-width="2"/>
+        <text x="230" y="82" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="9" font-weight="700">ROOF TANK</text>
+        <text x="230" y="95" text-anchor="middle" fill="#3b82f6" font-family="monospace" font-size="8">GRP Tank</text>
+        <!-- Water in roof tank -->
+        <rect x="172" y="100" width="116" height="23" rx="0" fill="#3b82f618"/>
+        <text x="230" y="115" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="7">Gravity feed down</text>
+
+        <!-- Float switch roof tank -->
+        <circle cx="290" cy="110" r="7" fill="#ef444422" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="290" y="114" text-anchor="middle" fill="#f87171" font-family="monospace" font-size="7">FS</text>
+
+        <!-- Pump to roof tank pipe -->
+        <path d="M125 207 Q230 207 230 125" fill="none" stroke="#22c97e" stroke-width="2.5" class="water-flow"/>
+        <text x="185" y="200" fill="#22c97e" font-family="monospace" font-size="7">PUMP → ROOF</text>
+
+        <!-- Roof tank down to villa -->
+        <line x1="230" y1="125" x2="230" y2="260" stroke="#60a5fa" stroke-width="2.5" class="water-flow"/>
+        <text x="248" y="200" fill="#60a5fa" font-family="monospace" font-size="7">GRAVITY</text>
+        <text x="248" y="210" fill="#60a5fa" font-family="monospace" font-size="7">FEED</text>
+
+        <!-- Villa outlets -->
+        <rect x="180" y="260" width="100" height="30" rx="5" fill="#22c97e18" stroke="#22c97e" stroke-width="1"/>
+        <text x="230" y="274" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="8">VILLA TAPS</text>
+        <text x="230" y="284" text-anchor="middle" fill="#22c97e" font-family="monospace" font-size="7">Bathrooms · Kitchen</text>
+
+        <!-- NRV non-return valve -->
+        <circle cx="230" cy="148" r="6" fill="#f59e0b22" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="230" y="152" text-anchor="middle" fill="#fbbf24" font-family="monospace" font-size="6">NRV</text>
+
+        <!-- DEWA boundary line -->
+        <line x1="105" y1="5" x2="105" y2="50" stroke="#a855f7" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="100" y="48" fill="#a855f7" font-family="monospace" font-size="6">DEWA</text>
+        <text x="115" y="48" fill="#555" font-family="monospace" font-size="6">OWNER</text>
+
+        <!-- Tappable hotspots -->
+        <g class="hotspot" onclick="showInfo3('meter','DEWA Meter — Boundary Point','DEWA is responsible for everything up to and including the meter. The meter sits at the boundary wall of the property. After the meter — all piping, tanks, pumps, and fittings are the building owner\'s responsibility. The meter shows consumption in cubic metres.','If meter shows no flow but you have supply pressure — the NRV or PRV after the meter may be blocked. If meter shows flow but no water inside — ground tank inlet valve may be closed.')">
+          <rect x="110" y="10" width="70" height="28" rx="5" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo3('prv','Strainer + PRV (Pressure Reducing Valve)','The strainer catches debris from the DEWA supply — small stones, sand, sediment. The PRV reduces mains pressure (which can be 4-6 bar) to a safe 2-3 bar for the villa plumbing. If PRV fails open — high pressure bursts flex hoses and fittings. If PRV fails closed — no water gets in.','FAULT: Good DEWA supply but no water in ground tank = check strainer (may be blocked with sand) and PRV. Bypass PRV temporarily to confirm fault.')">
+          <rect x="200" y="10" width="90" height="28" rx="5" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo3('gtank','Ground Storage Tank','Receives water from DEWA supply. Usually holds 5,000–10,000 litres. Located underground or at ground level. Must be cleaned minimum once per year (DM regulation). Has inlet ball valve, overflow pipe, and outlet to pump. The ball valve on inlet should be open — if accidentally closed, tank will not fill.','NO WATER IN TANK: 1. Check DEWA meter — is it registering flow? 2. Check inlet ball valve — is it open? 3. Check float switch — is it stuck up? 4. Check PRV/strainer blockage')">
+          <rect x="90" y="80" width="120" height="80" rx="8" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo3('pump','Transfer Pump','Pumps water from ground tank up to roof tank. Controlled by float switches — low level in roof tank switches pump on, high level switches it off. Pump runs on 220V single phase with its own MCB in the DB. If pump runs continuously — roof tank float switch stuck open. If pump never runs — check MCB, float switch wiring, pump capacitor.','PUMP FAULT: 1. Check MCB in DB 2. Measure voltage at pump terminals 3. Check float switch in roof tank — manually lift float, pump should stop 4. Check pump capacitor 5. Check impeller not blocked')">
+          <rect x="55" y="190" width="70" height="35" rx="6" fill="transparent"/>
+        </g>
+        <g class="hotspot" onclick="showInfo3('rftank','Roof Tank — GRP','Glass reinforced plastic tank on the roof. Supplies the whole villa by gravity — no pump pressure needed once water is in this tank. Must be DM-cleaned annually. Float switch here controls the transfer pump below. If this tank is empty — no water anywhere in villa. Check pump is running.','ROOF TANK EMPTY: 1. Check pump is running (MCB on, hearing pump motor) 2. Check pump float switch in ground tank — is level too low? 3. Check NRV on pump outlet — may be stuck closed 4. Check pump is actually moving water (feel outlet pipe for vibration)')">
+          <rect x="170" y="60" width="120" height="65" rx="8" fill="transparent"/>
+        </g>
+      </svg>
+      <div class="diagram-hint">TAP ANY PART TO UNDERSTAND IT</div>
+    </div>
+    <div class="info-panel" id="info-panel3">
+      <span class="info-close" onclick="closeInfo3()">✕</span>
+      <div class="info-panel-ttl" id="info-ttl3">—</div>
+      <div class="info-panel-body" id="info-body3">—</div>
+      <div class="info-test" id="info-test-wrap3"><div class="info-test-lbl">FAULT FINDING</div><div class="info-test-txt" id="info-test3">—</div></div>
+    </div>
+    <div class="layers">
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">Why does the villa have two tanks?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">DEWA supply pressure varies — it can drop or stop completely during peak demand. The ground tank provides storage buffer. The roof tank provides constant gravity pressure to the villa regardless of what DEWA supply is doing at any moment. <span class="highlight">Without the roof tank, every drop in DEWA pressure would cause fluctuating water pressure in the villa.</span></div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">What is a float switch and how does it work?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">A float switch is a simple on/off switch attached to a floating ball. When water level is <strong>low</strong> — float drops — contacts close — pump switches on. When water level is <strong>high</strong> — float rises — contacts open — pump switches off.<br><br><span class="warn">Stuck float (tangled on fitting) = pump runs all day = wasted electricity + possible overflow. Check float can move freely.</span></div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">No water in villa — exact fault finding sequence</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          <strong>Start at the roof — work down:</strong><br><br>
+          1. Check roof tank — is it empty or full?<br>
+          2. If <span class="danger">EMPTY</span> → go to ground tank, check level<br>
+          3. Ground tank <span class="danger">EMPTY</span> → DEWA supply issue or inlet valve closed<br>
+          4. Ground tank <span class="highlight">FULL</span> → pump fault (MCB, motor, float switch, NRV)<br>
+          5. Roof tank <span class="highlight">FULL</span> → gravity feed pipe blocked or valve closed<br><br>
+          <span class="warn">Never start at the taps. Always start at the source and work toward the taps.</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ELECTRICAL · LIGHTS & BULB TYPES
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="elec" id="card-lights">
+  <div class="card-hdr" onclick="toggleCard('lights')">
+    <div class="card-ico">💡</div>
+    <div class="card-info">
+      <div class="card-title">Light faults — bulbs, drivers, switches</div>
+      <div class="card-sub">LED · Halogen GU10 · Two-way wiring</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ Check MCB first. Then driver. Then bulb. In that order, every time.</p></div>
+    <div class="layers">
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">LED downlight vs GU10 halogen — what's the difference?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          <strong>LED downlight:</strong> Has a separate LED driver (small black box) that converts 220V to low DC. The LED strip/module itself runs at 12V, 24V, or 36V DC. When the light fails — it is usually the <span class="highlight">driver that fails, not the LED.</span> Replace driver first. AED 15–30.<br><br>
+          <strong>GU10 halogen:</strong> Runs directly on 220V. No driver needed. Two-pin twist-and-lock fitting. When it fails — just the bulb. AED 5 each. But: <span class="warn">UAE ceiling temperatures reach 65°C in summer — GU10 bulbs fail every 3–6 months. Consider recommending LED GU10 replacement (AED 15) — lasts 5 years.</span>
+        </div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">LED driver keeps failing — why?</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">Heat kills LED drivers. They are rated at 40–60°C maximum. UAE ceiling voids in summer reach 70°C+. The driver overheats, thermal protection trips it, it fails. <br><br>Solutions: <br>1. Use a higher-rated driver (check temperature specification on box)<br>2. Ensure ceiling void has some ventilation<br>3. Do not use a higher wattage driver than needed — excess heat<br><br><span class="warn">If same driver fails in same fitting within 6 months — temperature problem, not driver quality problem.</span></div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">Two-way switch wiring — how to test which wire is which</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          Wires at switch box: Live (L), Strapper 1 (S1), Strapper 2 (S2), possibly Neutral (N) and Earth (E).<br><br>
+          <strong>To test:</strong> Use a tester screwdriver. With switch box open and circuit live, the <span class="danger">Live wire</span> will glow the tester. The two strappers will only glow depending on switch position.<br><br>
+          <strong>Common fault:</strong> Light works from Switch 1 only, not Switch 2 → Switch 2 is single-way type. It has only 2 terminals. Replace with two-way type (3 terminals: C, L1, L2).<br><br>
+          <span class="danger">Always switch off MCB before working inside switch boxes. Test dead with tester before touching wires.</span>
+        </div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n4">4</div><div class="layer-q">UK socket wiring — UAE standard</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          UAE uses UK-standard 13A sockets (BS 1363). Three rectangular pins.<br><br>
+          <strong>Wiring inside socket:</strong><br>
+          — Live (L) → Brown wire → Bottom right terminal<br>
+          — Neutral (N) → Blue wire → Bottom left terminal<br>
+          — Earth (E) → Green/Yellow wire → Top terminal<br><br>
+          <span class="highlight">The earth pin is the longest — it opens the safety shutters inside the socket before live and neutral connect.</span><br><br>
+          <span class="warn">Never leave earth wire disconnected. In UAE humidity, unearthed metal appliances can give serious shock.</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     AC · R410A / R32 PRESSURE REFERENCE
+     ════════════════════════════════════════ -->
+<div class="card" data-cat="ac" id="card-pressures">
+  <div class="card-hdr" onclick="toggleCard('pressures')">
+    <div class="card-ico">🌡️</div>
+    <div class="card-info">
+      <div class="card-title">R410A / R32 pressure quick reference</div>
+      <div class="card-sub">UAE ambient temps · normal ranges · fault signs</div>
+    </div>
+    <div class="card-arrow">▶</div>
+  </div>
+  <div class="card-body">
+    <div class="enc-bar"><p>→ Use the Pressure Calculator in Tools for exact readings. This is the quick reference.</p></div>
+    <div class="layers">
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n1">1</div><div class="layer-q">R410A normal pressures — UAE summer</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          <strong>At 35°C ambient:</strong><br>
+          Suction (low side): 110–130 PSI<br>
+          Discharge (high side): 320–380 PSI<br><br>
+          <strong>At 45°C ambient:</strong><br>
+          Suction: 120–145 PSI<br>
+          Discharge: 380–450 PSI<br><br>
+          <strong>At 50°C ambient (peak UAE):</strong><br>
+          Suction: 130–155 PSI<br>
+          Discharge: 420–500 PSI<br><br>
+          <span class="warn">High discharge PSI at high ambient is NORMAL. Do not condemn compressor based on high-side reading alone in UAE summer.</span>
+        </div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n2">2</div><div class="layer-q">R32 — becoming more common, different pressures</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          R32 is replacing R410A in newer systems (post-2020). It is more efficient but runs at slightly higher pressures.<br><br>
+          <strong>At 45°C ambient:</strong><br>
+          Suction: 130–155 PSI<br>
+          Discharge: 400–480 PSI<br><br>
+          <span class="danger">R32 is mildly flammable (A2L classification). Do not use open flame near R32 systems during service. Ensure ventilation when recovering or charging.</span><br><br>
+          <span class="highlight">Check the nameplate on the outdoor unit — it always states the refrigerant type.</span>
+        </div></div>
+      </div>
+      <div class="layer" onclick="toggleLayer(this)">
+        <div class="layer-hdr"><div class="layer-num layer-n3">3</div><div class="layer-q">What low suction pressure actually means</div><div class="layer-chevron">▶</div></div>
+        <div class="layer-content"><div class="layer-text">
+          Suction below 80 PSI (R410A at 45°C) = one of these:<br><br>
+          1. <span class="danger">Low refrigerant</span> — most common. Find leak. Do not just top up.<br>
+          2. <span class="warn">Blocked expansion device</span> — suction very low, discharge normal or high. Superheat very high.<br>
+          3. <span class="warn">Dirty evaporator coil</span> — restricted airflow starves evaporator. Check filter and coil.<br>
+          4. <span class="warn">Indoor fan not running</span> — same effect as dirty coil.<br><br>
+          <span class="highlight">Suction pipe iced = low refrigerant or restricted airflow. Stop unit, find cause before restarting.</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end topic-list -->
+
+<script>
+// ── Card toggle ──
+function toggleCard(id) {
+  const card = document.getElementById('card-'+id);
+  if(!card) return;
+  const isOpen = card.classList.contains('open');
+  // Close all cards
+  document.querySelectorAll('.card.open').forEach(c=>c.classList.remove('open'));
+  if(!isOpen) card.classList.add('open');
+}
+
+// ── Layer toggle ──
+function toggleLayer(el) {
+  const isOpen = el.classList.contains('open');
+  // Close siblings
+  el.parentElement.querySelectorAll('.layer.open').forEach(l=>l.classList.remove('open'));
+  if(!isOpen) el.classList.add('open');
+}
+
+// ── Brand tab switching ──
+function switchBrand(brand, el) {
+  const card = el.closest('.card-body');
+  card.querySelectorAll('.brand-tab').forEach(t=>t.classList.remove('on'));
+  card.querySelectorAll('.brand-content').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  const bc = document.getElementById('brand-'+brand);
+  if(bc) bc.classList.add('on');
+}
+
+// ── Category filter ──
+function filterCat(cat, el) {
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.card').forEach(c=>{
+    if(cat==='all') { c.style.display=''; return; }
+    c.style.display = c.dataset.cat===cat ? '' : 'none';
+  });
+}
+
+// ── Info panels (refrigerant circuit) ──
+function showInfo(key, title, body, test) {
+  const p = document.getElementById('info-panel');
+  if(!p) return;
+  document.getElementById('info-ttl').textContent  = title;
+  document.getElementById('info-body').textContent = body;
+  document.getElementById('info-test').textContent = test;
+  p.classList.add('show');
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(navigator.vibrate) navigator.vibrate(25);
+}
+function closeInfo() {
+  const p = document.getElementById('info-panel');
+  if(p) p.classList.remove('show');
+}
+
+// ── Info panels (capacitor) ──
+function showInfo_cap(key, title, body, test) {
+  const p = document.getElementById('info-panel-cap');
+  if(!p) return;
+  document.getElementById('info-ttl-cap').textContent  = title;
+  document.getElementById('info-body-cap').textContent = body;
+  document.getElementById('info-test-cap').textContent = test;
+  p.classList.add('show');
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(navigator.vibrate) navigator.vibrate(25);
+}
+function closeInfo(suffix) {
+  const p = document.getElementById('info-panel'+(suffix?'-'+suffix:''));
+  if(p) p.classList.remove('show');
+}
+
+// ── Info panels (DB panel) ──
+function showInfo2(key, title, body, test) {
+  const p = document.getElementById('info-panel2');
+  if(!p) return;
+  document.getElementById('info-ttl2').textContent  = title;
+  document.getElementById('info-body2').textContent = body;
+  document.getElementById('info-test2').textContent = test;
+  p.classList.add('show');
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(navigator.vibrate) navigator.vibrate(25);
+}
+function closeInfo2() { const p=$('info-panel2'); if(p) p.classList.remove('show'); }
+
+// ── Info panels (water system) ──
+function showInfo3(key, title, body, test) {
+  const p = document.getElementById('info-panel3');
+  if(!p) return;
+  document.getElementById('info-ttl3').textContent  = title;
+  document.getElementById('info-body3').textContent = body;
+  document.getElementById('info-test3').textContent = test;
+  p.classList.add('show');
+  p.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(navigator.vibrate) navigator.vibrate(25);
+}
+function closeInfo3() { const p=document.getElementById('info-panel3'); if(p) p.classList.remove('show'); }
+
+// $ helper
+function $(id){ return document.getElementById(id); }
+</script>
+</body>
+</html>
